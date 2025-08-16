@@ -7,10 +7,21 @@ const Tudo = () => {
   const [todoList,setTodoList]=useState([]);
   const  inputRef=useRef();
   const  add=()=>{
-       const inputText=inputRef.current.value.trim();
 
-       
-      }
+       const inputText= inputRef.current.value.trim();
+if(inputText ===""){
+  return null;
+
+}
+
+const  newTodo={
+  id:Date.now(),
+  text:inputText,
+  isComplete:false,
+}       
+  setTodoList((prev)=>[...prev,newTodo]);
+  inputRef.current.value="";
+}
   return (
 
 
@@ -29,8 +40,10 @@ const Tudo = () => {
 
 
       </div>
-    <TodoList text="sample"/>
-    <TodoList text="sample2"/>
+
+      {todoList.map((item,index)=>{
+        return <TodoList key={index} text={item.text}/>
+      })}
       <div>
 
 
@@ -44,3 +57,5 @@ const Tudo = () => {
 }
 
 export default Tudo
+
+//46:20
