@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import todo_icon from '../assets/todo_icon.png'
 import TodoList from './TodoList'
 import { useRef } from 'react'
 
 const Tudo = () => {
-  const [todoList,setTodoList]=useState([]);
+  const [todoList,setTodoList]=useState(localStorage.getItem("todos")?
+JSON.parse(localStorage.getItem("todos")):[]);
   const  inputRef=useRef();
   const  add=()=>{
 
@@ -22,6 +23,30 @@ const  newTodo={
   setTodoList((prev)=>[...prev,newTodo]);
   inputRef.current.value="";
 }
+const deleteTodo =(id)=>{
+setTodoList((prevTodos)=>{
+   return prevTodos.filter((todo)=> todo.id !==id)
+})
+}
+
+
+
+const toggle =(id)=>{
+  setTodoList((prev)=>{
+    return prev.map((todo)=>{
+      if(todo.id ===id ){
+        return {...todo,isComplete:!todo.isComplete}
+      }
+      return todo;
+    })
+  })
+}
+
+
+useEffect(()=>{
+  localStorage.setItem("todos",JSON.stringify(todoList));
+  
+},[todoList])
   return (
 
 
@@ -42,7 +67,8 @@ const  newTodo={
       </div>
 
       {todoList.map((item,index)=>{
-        return <TodoList key={index} text={item.text}/>
+        return <TodoList key={index} text={item.text} id={item.id}
+        isComplete={item.isComplete} deleteTodo={deleteTodo} toggle={toggle}/>
       })}
       <div>
 
@@ -57,5 +83,3 @@ const  newTodo={
 }
 
 export default Tudo
-
-//46:20
